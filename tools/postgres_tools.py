@@ -1,26 +1,77 @@
-﻿from typing import Any, Dict, List, Optional
-from connections.postgres_client import get_pool
+﻿from typing import Dict, Any, List
 
-async def execute_query(sql: str, params: Optional[List[Any]] = None) -> List[Dict[str, Any]]:
-    pool = await get_pool()
-    async with pool.acquire() as conn:
-        rows = await conn.fetch(sql, *(params or []))
-        return [dict(r) for r in rows]
 
-async def list_tables(schema: str = "public") -> List[Dict[str, Any]]:
-    sql = '''
-    SELECT table_name
-    FROM information_schema.tables
-    WHERE table_schema = 
-    ORDER BY table_name;
-    '''
-    return await execute_query(sql, [schema])
+def execute_query(sql: str, params: Dict[str, Any] | None = None) -> Dict[str, Any]:
+    """
+    Week 1: Execute a SELECT query (stub).
+    """
+    return {
+        "sql": sql,
+        "params": params or {},
+        "rows": [],
+    }
 
-async def get_table_schema(table: str, schema: str = "public") -> List[Dict[str, Any]]:
-    sql = '''
-    SELECT column_name, data_type, is_nullable
-    FROM information_schema.columns
-    WHERE table_schema =  AND table_name = 
-    ORDER BY ordinal_position;
-    '''
-    return await execute_query(sql, [schema, table])
+
+def get_table_schema(table_name: str) -> Dict[str, Any]:
+    """
+    Week 1: Get table structure (stub).
+    """
+    return {
+        "table": table_name,
+        "columns": [
+            {"name": "id", "type": "integer"},
+            {"name": "value", "type": "text"},
+        ],
+    }
+
+
+def list_tables(schema_name: str | None = None) -> Dict[str, Any]:
+    """
+    Week 1: List available tables (stub).
+    """
+    tables: List[str] = ["users", "orders", "products"]
+    return {
+        "schema": schema_name or "public",
+        "tables": tables,
+    }
+
+
+# ---------------------------
+# Week 2: Advanced Postgres tools
+# ---------------------------
+
+def execute_dml(sql: str, params: Dict[str, Any] | None = None) -> Dict[str, Any]:
+    """
+    Week 2: Execute INSERT/UPDATE/DELETE (stub).
+    """
+    return {
+        "sql": sql,
+        "params": params or {},
+        "rowcount": 0,
+        "status": "ok",
+    }
+
+
+def create_table(table_name: str, columns: Dict[str, str]) -> Dict[str, Any]:
+    """
+    Week 2: Create a new table (stub).
+    columns is a dict like {"id": "integer", "name": "text"}.
+    """
+    return {
+        "table": table_name,
+        "columns": columns,
+        "status": "created_stub",
+    }
+
+
+def bulk_load_from_spark(dataframe_ref: str, target_table: str) -> Dict[str, Any]:
+    """
+    Week 2: Transfer data from Spark to PostgreSQL (stub).
+    In a real implementation, dataframe_ref would identify a Spark DataFrame.
+    """
+    return {
+        "dataframe_ref": dataframe_ref,
+        "target_table": target_table,
+        "rows_loaded": 0,
+        "status": "bulk_load_stub",
+    }

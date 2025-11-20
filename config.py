@@ -1,19 +1,22 @@
-﻿import os
-from dataclasses import dataclass
+﻿from pydantic_settings import BaseSettings, SettingsConfigDict
 
-@dataclass
-class Settings:
-    postgres_host: str = os.getenv("POSTGRES_HOST", "localhost")
-    postgres_port: int = int(os.getenv("POSTGRES_PORT", "5432"))
-    postgres_db: str = os.getenv("POSTGRES_DB", "postgres")
-    postgres_user: str = os.getenv("POSTGRES_USER", "postgres")
-    postgres_password: str = os.getenv("POSTGRES_PASSWORD", "postgres")
+class Settings(BaseSettings):
+    # MCP server
+    mcp_server_host: str = "0.0.0.0"
+    mcp_server_port: int = 8000
 
-    spark_master: str = os.getenv("SPARK_MASTER", "local[*]")
-    spark_app_name: str = os.getenv("SPARK_APP_NAME", "mcp-spark-client")
+    # Postgres
+    postgres_host: str = "localhost"
+    postgres_port: int = 5432
+    postgres_db: str = "postgres"
+    postgres_user: str = "postgres"
+    postgres_password: str = "postgres"
 
-    mcp_server_host: str = os.getenv("MCP_SERVER_HOST", "0.0.0.0")
-    mcp_server_port: int = int(os.getenv("MCP_SERVER_PORT", "8000"))
-    log_level: str = os.getenv("LOG_LEVEL", "INFO")
+    # Spark
+    spark_master: str = "local[*]"
+    spark_app_name: str = "mcp-server"
+
+    # Allow extra values in .env
+    model_config = SettingsConfigDict(extra="allow", env_file=".env")
 
 settings = Settings()
